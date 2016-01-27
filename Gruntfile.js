@@ -33,25 +33,28 @@ module.exports = function (grunt) {
     });
   });
 
+  var pxtorem = require('postcss-pxtorem');
+  var mqpacker = require('css-mqpacker');
+
   // Project configuration.
   grunt.initConfig({
 
     // Metadata.
     pkg: grunt.file.readJSON('package.json'),
     banner: '/*!\n' +
-            ' * Bootstrap v<%= pkg.version %> (<%= pkg.homepage %>)\n' +
-            ' * Copyright 2011-<%= grunt.template.today("yyyy") %> <%= pkg.author %>\n' +
-            ' * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)\n' +
-            ' */\n',
+    ' * Bootstrap v<%= pkg.version %> (<%= pkg.homepage %>)\n' +
+    ' * Copyright 2011-<%= grunt.template.today("yyyy") %> <%= pkg.author %>\n' +
+    ' * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)\n' +
+    ' */\n',
     jqueryCheck: 'if (typeof jQuery === \'undefined\') {\n' +
-                 '  throw new Error(\'Bootstrap\\\'s JavaScript requires jQuery\')\n' +
-                 '}\n',
+    '  throw new Error(\'Bootstrap\\\'s JavaScript requires jQuery\')\n' +
+    '}\n',
     jqueryVersionCheck: '+function ($) {\n' +
-                        '  var version = $.fn.jquery.split(\' \')[0].split(\'.\')\n' +
-                        '  if ((version[0] < 2 && version[1] < 9) || (version[0] == 1 && version[1] == 9 && version[2] < 1) || (version[0] >= 3)) {\n' +
-                        '    throw new Error(\'Bootstrap\\\'s JavaScript requires at least jQuery v1.9.1 but less than v3.0.0\')\n' +
-                        '  }\n' +
-                        '}(jQuery);\n\n',
+    '  var version = $.fn.jquery.split(\' \')[0].split(\'.\')\n' +
+    '  if ((version[0] < 2 && version[1] < 9) || (version[0] == 1 && version[1] == 9 && version[2] < 1) || (version[0] >= 3)) {\n' +
+    '    throw new Error(\'Bootstrap\\\'s JavaScript requires at least jQuery v1.9.1 but less than v3.0.0\')\n' +
+    '  }\n' +
+    '}(jQuery);\n\n',
 
     // Task configuration.
     clean: {
@@ -226,6 +229,16 @@ module.exports = function (grunt) {
         options: {
           map: true,
           processors: [
+            mqpacker({sort: true}),
+            pxtorem({
+              rootValue: 16,
+              unitPrecision: 5,
+              propWhiteList: [],
+              selectorBlackList: ['.container'],
+              replace: true,
+              mediaQuery: false,
+              minPixelValue: 0
+            }),
             mq4HoverShim.postprocessorFor({ hoverSelectorPrefix: '.bs-true-hover ' }),
             autoprefixer
           ]
@@ -235,6 +248,16 @@ module.exports = function (grunt) {
       docs: {
         options: {
           processors: [
+            mqpacker({sort: true}),
+            pxtorem({
+              rootValue: 16,
+              unitPrecision: 5,
+              propWhiteList: [],
+              selectorBlackList: ['.container'],
+              replace: true,
+              mediaQuery: false,
+              minPixelValue: 0
+            }),
             autoprefixer
           ]
         },
@@ -243,6 +266,16 @@ module.exports = function (grunt) {
       examples: {
         options: {
           processors: [
+            mqpacker({sort: true}),
+            pxtorem({
+              rootValue: 16,
+              unitPrecision: 5,
+              propWhiteList: [],
+              selectorBlackList: ['.container'],
+              replace: true,
+              mediaQuery: false,
+              minPixelValue: 0
+            }),
             autoprefixer
           ]
         },
@@ -447,23 +480,23 @@ module.exports = function (grunt) {
   var testSubtasks = [];
   // Skip core tests if running a different subset of the test suite
   if (runSubset('core') &&
-    // Skip core tests if this is a Savage build
+      // Skip core tests if this is a Savage build
     process.env.TRAVIS_REPO_SLUG !== 'twbs-savage/bootstrap') {
     testSubtasks = testSubtasks.concat(['dist-css', 'dist-js', 'test-scss', 'test-js', 'docs']);
   }
   // Skip HTML validation if running a different subset of the test suite
   if (runSubset('validate-html') &&
-      isTravis &&
+    isTravis &&
       // Skip HTML5 validator when [skip validator] is in the commit message
-      isUndefOrNonZero(process.env.TWBS_DO_VALIDATOR)) {
+    isUndefOrNonZero(process.env.TWBS_DO_VALIDATOR)) {
     testSubtasks.push('validate-html');
   }
   // Only run Sauce Labs tests if there's a Sauce access key
   if (typeof process.env.SAUCE_ACCESS_KEY !== 'undefined' &&
       // Skip Sauce if running a different subset of the test suite
-      runSubset('sauce-js-unit') &&
+    runSubset('sauce-js-unit') &&
       // Skip Sauce on Travis when [skip sauce] is in the commit message
-      isUndefOrNonZero(process.env.TWBS_DO_SAUCE)) {
+    isUndefOrNonZero(process.env.TWBS_DO_SAUCE)) {
     testSubtasks.push('babel:dev');
     testSubtasks.push('connect');
     testSubtasks.push('saucelabs-qunit');
