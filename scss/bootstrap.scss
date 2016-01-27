@@ -51,3 +51,62 @@
 
 // Utility classes
 @import "utilities";
+
+.navbar-right { @extend .pull-sm-right; }
+.navbar-left { @extend .pull-sm-left; }
+.navbar-form {@extend .form-inline;}
+.navbar-nav, .nav-tabs {
+  > li {
+    @extend .nav-item;
+    > a {
+      @extend .nav-link;
+    }
+  }
+}
+.navbar-default {
+  @extend .navbar-light, .bg-faded;
+}
+.navbar-inverse {
+  @extend .navbar-dark, .bg-inverse;
+}
+.navbar-header {
+  //min-height: 2em;
+}
+.navbar-collapse {
+  @extend .navbar-toggleable-xs;
+  &.collapse.in .navbar-nav {
+    //margin-top: 3em;
+    @extend .nav-stacked;
+  }
+}
+.navbar-toggle {
+  display: none !important;
+  //float: right;
+  //@extend .navbar-toggler, .hidden-sm-up;
+  //&:after {
+  //  content: "☰";
+  //}
+}
+
+.panel {@extend .card;}
+.panel-heading {@extend .card-header;}
+.panel-title {@extend .card-title;}
+.panel-body {@extend .card-block;}
+.panel-footer {@extend .card-footer;}
+.panel-primary {@extend .card-primary, .card-inverse;}
+.panel-success {@extend .card-success, .card-inverse;}
+.panel-info {@extend .card-info, .card-inverse;}
+.panel-warning {@extend .card-warning, .card-inverse;}
+.panel-danger {@extend .card-danger, .card-inverse;}
+
+.carousel .item {@extend .carousel-item;}
+
+.img-responsive {@include img-fluid();}
+
+.text-center {@extend .text-xs-center;}
+
+.list-inline > li {@extend .list-inline-item;}
+
+.dropdown-menu > li > a {@extend .dropdown-item;}
+
+.breadcrumb > li {@extend .breadcrumb-item;}
